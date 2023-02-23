@@ -33,7 +33,7 @@ class _TextFieldsState extends State<TextFields> {
                 ),
               ),
               autofocus: true,
-              maxLines: 7,
+              maxLines: 3,
         );
   }
 }
