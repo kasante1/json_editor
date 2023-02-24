@@ -1,247 +1,205 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:intl/intl.dart';
+import 'dart:io';
+
 
 void main() => runApp(const MyApp());
 
+
+
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter FormBuilder Demo',
+      theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      home: const CompleteForm(),
+      home: const HomePage(),
     );
   }
 }
 
-class CompleteForm extends StatefulWidget {
-  const CompleteForm({Key? key}) : super(key: key);
+
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<CompleteForm> createState() {
-    return _CompleteFormState();
-  }
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _CompleteFormState extends State<CompleteForm> {
-  bool autoValidate = true;
-  bool readOnly = false;
-  bool showSegmentedControl = true;
-  final _formKey = GlobalKey<FormBuilderState>();
-  bool _ageHasError = false;
+class _HomePageState extends State<HomePage> {
 
+  final _formKey = GlobalKey<FormState>();
 
+  late final TextEditingController _chaptertitleController;
+  late final TextEditingController _chaptertextController;
+  late final TextEditingController _fileDirectoryPathController;
 
-
-  void _onChanged(dynamic val) => debugPrint(val.toString());
+  @override
+  void initState() {
+    super.initState();
+    _chaptertitleController = TextEditingController();
+    _chaptertextController = TextEditingController();
+  }
+  
+  @override
+  void dispose() {
+    _chaptertitleController.dispose();
+    _chaptertextController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Form Builder Example')),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              FormBuilder(
-                key: _formKey,
-                // enabled: false,
-                onChanged: () {
-                  _formKey.currentState!.save();
-                  debugPrint(_formKey.currentState!.value.toString());
-                },
-                autovalidateMode: AutovalidateMode.disabled,
-               
-                skipDisabled: true,
-                child: Column(
-                  children: <Widget>[
-                    const SizedBox(height: 15),
-
-
-                    FormBuilderTextField(
-                      autovalidateMode: AutovalidateMode.always,
-                      name: 'age',
-                      decoration: InputDecoration(
-                        labelText: 'Age',
-                        suffixIcon: _ageHasError
-                            ? const Icon(Icons.error, color: Colors.red)
-                            : const Icon(Icons.check, color: Colors.green),
-                      ),
-                      onChanged: (val) {
-                        setState(() {
-                          _ageHasError = !(_formKey.currentState?.fields['age']
-                                  ?.validate() ??
-                              false);
-                        });
-                      },
-                      // valueTransformer: (text) => num.tryParse(text),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                       
-                        FormBuilderValidators.max(100),
-                      ]),
-                      // initialValue: '12',
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
+      body: Center(
+        child: Form(
+          key: _formKey,
+          child:
+          SizedBox(
+            width: 600,
+            child:
+           Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: _fileDirectoryPathController,
+                 decoration: InputDecoration(
+                focusedBorder:
+                const OutlineInputBorder(borderSide: BorderSide(width: 2.0)),
+                labelText: 'File Path',
+                enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(width: 0.9)
                     ),
-const SizedBox(height: 15),
-                    FormBuilderTextField(
-                      autovalidateMode: AutovalidateMode.always,
-                      name: 'name',
-                      decoration: InputDecoration(
-                        labelText: 'name',
-                        suffixIcon: _ageHasError
-                            ? const Icon(Icons.error, color: Colors.red)
-                            : const Icon(Icons.check, color: Colors.green),
-                      ),
-                      onChanged: (val) {
-                        setState(() {
-                          _ageHasError = !(_formKey.currentState?.fields['name']
-                                  ?.validate() ??
-                              false);
-                        });
-                      },
-                      // valueTransformer: (text) => num.tryParse(text),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                       
-                        FormBuilderValidators.max(100),
-                      ]),
-                      // initialValue: '12',
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                    ),
-const SizedBox(height: 15),
-                    FormBuilderTextField(
-                      autovalidateMode: AutovalidateMode.always,
-                      name: 'height',
-                      decoration: InputDecoration(
-                        labelText: 'height',
-                        suffixIcon: _ageHasError
-                            ? const Icon(Icons.error, color: Colors.red)
-                            : const Icon(Icons.check, color: Colors.green),
-                      ),
-                      onChanged: (val) {
-                        setState(() {
-                          _ageHasError = !(_formKey.currentState?.fields['age']
-                                  ?.validate() ??
-                              false);
-                        });
-                      },
-                      // valueTransformer: (text) => num.tryParse(text),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                       
-                        FormBuilderValidators.max(100),
-                      ]),
-                      // initialValue: '12',
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                    ),
-const SizedBox(height: 15),
-                    FormBuilderTextField(
-                      autovalidateMode: AutovalidateMode.always,
-                      name: 'dell',
-                      decoration: InputDecoration(
-                        labelText: 'dell',
-                        suffixIcon: _ageHasError
-                            ? const Icon(Icons.error, color: Colors.red)
-                            : const Icon(Icons.check, color: Colors.green),
-                      ),
-                      onChanged: (val) {
-                        setState(() {
-                          _ageHasError = !(_formKey.currentState?.fields['age']
-                                  ?.validate() ??
-                              false);
-                        });
-                      },
-                      // valueTransformer: (text) => num.tryParse(text),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                       
-                        FormBuilderValidators.max(100),
-                      ]),
-                      // initialValue: '12',
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                    ),
-const SizedBox(height: 15),
-                    FormBuilderTextField(
-                      autovalidateMode: AutovalidateMode.always,
-                      name: 'hp',
-                      decoration: InputDecoration(
-                        labelText: 'hp',
-                        suffixIcon: _ageHasError
-                            ? const Icon(Icons.error, color: Colors.red)
-                            : const Icon(Icons.check, color: Colors.green),
-                      ),
-                      onChanged: (val) {
-                        setState(() {
-                          _ageHasError = !(_formKey.currentState?.fields['age']
-                                  ?.validate() ??
-                              false);
-                        });
-                      },
-                      // valueTransformer: (text) => num.tryParse(text),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                       
-                        FormBuilderValidators.max(100),
-                      ]),
-                      // initialValue: '12',
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                    ),
-                   
-                   
-                                        
-                  ],
+                    suffixIcon: IconButton(
+                    icon: const Icon(
+                      Icons.cancel,
+                    ), onPressed: (){
+                       _fileDirectoryPathController.clear();
+                        },
+                    
                 ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.only(
+                  left: 16,
+                  right: 20,
+                  top: 14,
+                  bottom: 14,
+                ),
+                
               ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState?.saveAndValidate() ?? false) {
-                          debugPrint(_formKey.currentState?.value.toString());
-                        } else {
-                          debugPrint(_formKey.currentState?.value.toString());
-                          debugPrint('validation failed');
-                        }
-                      },
-                      child: const Text(
-                        'Submit',
-                        style: TextStyle(color: Colors.white),
-                      ),
+              autofocus: true,
+              maxLines: 2,
+              ),               
+              const SizedBox(height: 50),
+              TextFormField(
+                controller: _chaptertitleController,
+                 decoration: InputDecoration(
+                focusedBorder:
+                const OutlineInputBorder(borderSide: BorderSide(width: 2.0)),
+                labelText: 'chaptertitle',
+                enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(width: 0.9)
                     ),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        _formKey.currentState?.reset();
-                      },
-                      // color: Theme.of(context).colorScheme.secondary,
-                      child: Text(
-                        'Reset',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary),
-                      ),
-                    ),
-                  ),
-                ],
+                    suffixIcon: IconButton(
+                    icon: const Icon(
+                      Icons.cancel,
+                    ), onPressed: (){
+                       _chaptertitleController.clear();
+                        },
+                    
+                ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.only(
+                  left: 16,
+                  right: 20,
+                  top: 14,
+                  bottom: 14,
+                ),
+                
               ),
+              autofocus: true,
+              maxLines: 2,
+              ),               
+              const SizedBox(height: 50),
+              TextFormField(
+                controller: _chaptertextController,
+                decoration: InputDecoration(
+                focusedBorder:
+                const OutlineInputBorder(borderSide: BorderSide(width: 2.0)),
+                labelText: 'chaptertext',
+                enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(width: 0.9)
+                    ),
+                 suffixIcon: IconButton(
+                    icon: const Icon(
+                      Icons.cancel,
+                    ),
+                    onPressed: () {
+                      _chaptertextController.clear();
+                    }
+                    ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.only(
+                  left: 16,
+                  right: 20,
+                  top: 14,
+                  bottom: 14,
+                ),
+               
+              ),
+              autofocus: true,
+              maxLines: 3,
+              ),
+              const SizedBox(height: 20),
+               SizedBox(
+                  height: 50.0,
+                  width: 100.0,
+                  child:
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    var chaptertitle = _chaptertitleController.text.toString().replaceAll("\n", " ");
+                    var chaptertext = _chaptertextController.text.toString().replaceAll("\n", " ");
+                    String jsonValues = """
+{
+"chaptertitle": "$chaptertitle",
+"chaptertext": "$chaptertext"
+},
+  """;
+                    createFile(_fileDirectoryPathController.text, jsonValues);
+                  }
+                },
+                child: const Text('Submit'),
+              ),
+               ),
             ],
           ),
+        ),
         ),
       ),
     );
   }
+}
+
+
+
+
+
+
+createFile(var filePath, var jsoncontents) async {
+// Get the system temp directory.
+//var systemTempDir = Directory.systemTemp;
+// Creates dir/, dir/subdir/, and dir/subdir/file.txt in the system
+// temp directory.
+var file = await File(filePath)
+.create(recursive: true);
+
+var writeFileContents = file.openWrite(mode:FileMode.append);
+
+writeFileContents.write(jsoncontents);
+
 }

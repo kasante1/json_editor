@@ -494,3 +494,148 @@
 //     );
 //   }
 // }
+
+// press button to reveal textfield
+
+// import 'package:flutter/material.dart';
+
+// void main() {
+//   runApp(const MyApp());
+// }
+
+// class MyApp extends StatelessWidget {
+//   const MyApp({Key? key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Flutter Demo',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+//     );
+//   }
+// }
+
+// class MyHomePage extends StatefulWidget {
+//   const MyHomePage({Key? key, required this.title}) : super(key: key);
+//   final String title;
+
+//   @override
+//   State<MyHomePage> createState() => _MyHomePageState();
+// }
+
+// class _MyHomePageState extends State<MyHomePage> {
+
+//   TextEditingController keyController = TextEditingController();
+//   TextEditingController valueController = TextEditingController();
+
+//   String _note = ''.replaceAll('\n', '');
+//   final List<String> _notes = [];
+
+
+//   _addKey() {
+//     showDialog(
+//         context: context,
+//         builder: (context) {
+//           return AlertDialog(
+//             actions: [
+//               TextButton(
+//                   onPressed: () {
+//                     setState(() {
+//                    _notes.add("{"" + $_note : ");
+//                       keyController.clear();
+//                     });
+//                     Navigator.pop(context);
+//                   },
+//                   child: const Text('Save Note'))
+//             ],
+//             title: const Text('Enter Note'),
+//             content: TextField(
+//               controller: keyController,
+//               decoration:
+//                   const InputDecoration(contentPadding: EdgeInsets.all(10)),
+//               onChanged: (val) {
+//                 setState(() {
+//                   _note = val;
+//                 });
+//               },
+//             ),
+//           );
+//         });
+//   }
+
+  
+//   _addValue() {
+//     showDialog(
+//         context: context,
+//         builder: (context) {
+//           return AlertDialog(
+//             actions: [
+//               TextButton(
+//                   onPressed: () {
+//                     setState(() {
+//                       _notes.add(_note + "$_note}");
+//                       valueController.clear();
+//                     });
+//                     Navigator.pop(context);
+//                   },
+//                   child: const Text('Save Note'))
+//             ],
+//             title: const Text('Enter Note'),
+//             content: TextField(
+//               controller: valueController,
+//               decoration:
+//                   const InputDecoration(contentPadding: EdgeInsets.all(10)),
+//               onChanged: (val) {
+//                 setState(() {
+//                   _note = val;
+//                 });
+//               },
+//             ),
+//           );
+//         });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(widget.title),
+//       ),
+//       body: ListView.builder(
+//           itemCount: _notes.length,
+//           itemBuilder: (context, index) {
+//             return Column(
+//               children:[
+//              // const Text("{"),
+//               Text(_notes[index].toString()),
+//              // const Text("},"),
+//               ]
+//             );
+//           }),
+//       floatingActionButton: Column(
+//         mainAxisAlignment: MainAxisAlignment.end,
+//         children: [
+//            FloatingActionButton(
+//             onPressed: _addKey,
+//             tooltip: 'Add Key',
+//             child: const Icon(Icons.key),
+//           ),
+//           const SizedBox(
+//             height: 10,
+//           ),
+//           FloatingActionButton(
+//             onPressed: _addValue,
+//             tooltip: 'Add Value',
+//             child: const Icon(Icons.add),
+//           ),
+          
+         
+//         ],
+//       ),
+//     );
+//   }
+// }
+
