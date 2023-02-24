@@ -35,13 +35,14 @@ class _HomePageState extends State<HomePage> {
 
   late final TextEditingController _chaptertitleController;
   late final TextEditingController _chaptertextController;
-  late final TextEditingController _fileDirectoryPathController;
+  final TextEditingController _fileDirectoryPathController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _chaptertitleController = TextEditingController();
     _chaptertextController = TextEditingController();
+    _fileDirectoryPathController.text = '/home/asante/Desktop/file.json';
   }
   
   @override
@@ -70,6 +71,7 @@ class _HomePageState extends State<HomePage> {
                 focusedBorder:
                 const OutlineInputBorder(borderSide: BorderSide(width: 2.0)),
                 labelText: 'File Path',
+                hintText: "default index : 5",
                 enabledBorder: const OutlineInputBorder(
                     borderSide: BorderSide(width: 0.9)
                     ),
