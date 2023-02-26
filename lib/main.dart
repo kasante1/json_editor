@@ -1,77 +1,184 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:multi_textfields/write_file.dart';
+
 
 
 void main() => runApp(const MyApp());
 
-
-
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Flutter FormBuilder Demo',
-      theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: CompleteForm(),
     );
   }
 }
 
 
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+
+
+class CompleteForm extends StatefulWidget {
+  const CompleteForm({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<CompleteForm> createState() {
+    return _CompleteFormState();
+  }
 }
 
-class _HomePageState extends State<HomePage> {
+class _CompleteFormState extends State<CompleteForm> {
 
-  final _formKey = GlobalKey<FormState>();
+  TextEditingController valueController = TextEditingController();
 
-  late final TextEditingController _chaptertitleController;
-  late final TextEditingController _chaptertextController;
-  final TextEditingController _fileDirectoryPathController = TextEditingController();
+  late final TextEditingController chaptertitleController;
+  late final TextEditingController subtitleController;
+  late final TextEditingController subtextController;
+
+  final TextEditingController fileDirectoryPathController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _chaptertitleController = TextEditingController();
-    _chaptertextController = TextEditingController();
-    _fileDirectoryPathController.text = '/home/asante/Desktop/file.json';
+    chaptertitleController = TextEditingController();
+    subtitleController = TextEditingController();
+    subtextController = TextEditingController();
+    fileDirectoryPathController.text = '/home/asante/Desktop/file.json';
   }
-  
+
   @override
   void dispose() {
-    _chaptertitleController.dispose();
-    _chaptertextController.dispose();
+  subtitleController.dispose();
+  subtextController.dispose();
+  fileDirectoryPathController;
     super.dispose();
+  }
+
+  List textFieldLists = [];
+
+
+
+  String textFieldItems = "";
+
+  // get text field name from the icon button
+
+  addTextField(List textfieldIdentities) {
+      setState(() {
+        textFieldLists.add(textfieldIdentities);
+      });
+  }
+
+
+  TextField newTextField(hintText, controller){
+
+    return  TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: hintText,
+                focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                    width: 2.0,
+                    color: Colors.blue)),
+
+                enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: 0.9,
+                    color: Colors.black)),
+                // prefixIcon: IconButton(
+                //     icon: const Icon(Icons.arrow_back), onPressed: () {}),
+                suffixIcon: IconButton(
+                    icon: const Icon(
+                      Icons.cancel,
+                    ),
+                    onPressed: () {
+                      controller.clear();
+                    }),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.only(
+                  left: 16,
+                  right: 20,
+                  top: 14,
+                  bottom: 14,
+                ),
+              ),
+
+            );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Form(
-          key: _formKey,
-          child:
-          SizedBox(
-            width: 600,
+      appBar: AppBar(title: const Text('Form Builder Example')),
+      body:
+      Row(
+        children:[
+          const SizedBox(width: 100,),
+          SingleChildScrollView(
             child:
-           Column(
-            mainAxisSize: MainAxisSize.min,
+             Column(
+              children:[
+
+                for(var index in textFieldLists)
+
+                  Row(children: [
+                    SizedBox(width:500,
+                  child:newTextField(index[0], index[1])),
+                  const SizedBox(width:20),
+                   IconButton(
+            color: Colors.blue,
+            iconSize: 40.0,
+            onPressed:((){
+              setState(() {
+                textFieldLists.removeAt(textFieldLists.indexOf(index));
+              });
+            }),
+            tooltip: 'remove text field',
+            icon: const Icon(Icons.cancel_outlined),
+           ),
+           ],
+           ),
+
+                const SizedBox(height: 30,),
+                 SizedBox(
+                  width: 100,
+                  height: 100,
+                  child:
+                ElevatedButton(
+                      onPressed: () {
+                        createFile(fileDirectoryPathController.text,
+                        chaptertitleController.text, subtitleController.text,
+                        subtextController.text);
+                      },
+
+                      child: const Text(
+                        'Submit',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                 ),
+
+
+              ],
+              ),
+              ),
+
+              const SizedBox(width: 20,),
+              Column(
             children: [
-              TextFormField(
-                controller: _fileDirectoryPathController,
+            const SizedBox(height: 50,),
+            SizedBox(
+              width: 300,
+               child:TextFormField(
+                controller: fileDirectoryPathController,
                  decoration: InputDecoration(
                 focusedBorder:
                 const OutlineInputBorder(borderSide: BorderSide(width: 2.0)),
                 labelText: 'File Path',
-                hintText: "default index : 5",
                 enabledBorder: const OutlineInputBorder(
                     borderSide: BorderSide(width: 0.9)
                     ),
@@ -79,9 +186,9 @@ class _HomePageState extends State<HomePage> {
                     icon: const Icon(
                       Icons.cancel,
                     ), onPressed: (){
-                       _fileDirectoryPathController.clear();
+                       fileDirectoryPathController.clear();
                         },
-                    
+
                 ),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.only(
@@ -90,118 +197,45 @@ class _HomePageState extends State<HomePage> {
                   top: 14,
                   bottom: 14,
                 ),
-                
+
               ),
               autofocus: true,
               maxLines: 2,
-              ),               
+              ),
+            ),
               const SizedBox(height: 50),
-              TextFormField(
-                controller: _chaptertitleController,
-                 decoration: InputDecoration(
-                focusedBorder:
-                const OutlineInputBorder(borderSide: BorderSide(width: 2.0)),
-                labelText: 'chaptertitle',
-                enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(width: 0.9)
-                    ),
-                    suffixIcon: IconButton(
-                    icon: const Icon(
-                      Icons.cancel,
-                    ), onPressed: (){
-                       _chaptertitleController.clear();
-                        },
-                    
-                ),
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.only(
-                  left: 16,
-                  right: 20,
-                  top: 14,
-                  bottom: 14,
-                ),
-                
-              ),
-              autofocus: true,
-              maxLines: 2,
-              ),               
-              const SizedBox(height: 50),
-              TextFormField(
-                controller: _chaptertextController,
-                decoration: InputDecoration(
-                focusedBorder:
-                const OutlineInputBorder(borderSide: BorderSide(width: 2.0)),
-                labelText: 'chaptertext',
-                enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(width: 0.9)
-                    ),
-                 suffixIcon: IconButton(
-                    icon: const Icon(
-                      Icons.cancel,
-                    ),
-                    onPressed: () {
-                      _chaptertextController.clear();
-                    }
-                    ),
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.only(
-                  left: 16,
-                  right: 20,
-                  top: 14,
-                  bottom: 14,
-                ),
-               
-              ),
-              autofocus: true,
-              maxLines: 3,
-              ),
-              const SizedBox(height: 20),
-               SizedBox(
-                  height: 50.0,
-                  width: 100.0,
-                  child:
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    var chaptertitle = _chaptertitleController.text.toString().replaceAll("\n", " ");
-                    var chaptertext = _chaptertextController.text.toString().replaceAll("\n", " ");
-                    String jsonValues = """
-{
-"chaptertitle": "$chaptertitle",
-"chaptertext": "$chaptertext"
-},
-  """;
-                    createFile(_fileDirectoryPathController.text, jsonValues);
-                  }
-                },
-                child: const Text('Submit'),
-              ),
-               ),
-            ],
-          ),
-        ),
-        ),
-      ),
+           IconButton(
+            color: Colors.blue,
+            iconSize: 40.0,
+            onPressed:(() => addTextField(["chaptertitle", chaptertitleController])),
+            tooltip: 'chaptertitle',
+            icon: const Icon(Icons.text_fields_outlined),
+
+           ),
+           const SizedBox(height: 30,),
+            IconButton(
+               color: Colors.blue,
+            iconSize: 40.0,
+            onPressed:(() => addTextField(["subtitle",subtitleController])),
+            tooltip: 'subtitle',
+            icon:const Icon(Icons.subject),
+           ),
+           const SizedBox(height: 30,),
+            IconButton(
+               color: Colors.blue,
+            iconSize: 40.0,
+            onPressed:(() => addTextField(["subtext",subtextController])),
+            tooltip: 'subtext',
+            icon:const Icon(Icons.subtitles),
+           ),
+
+                  ]
+                 )
+        ]
+                )
+
     );
   }
-}
-
-
-
-
-
-
-createFile(var filePath, var jsoncontents) async {
-// Get the system temp directory.
-//var systemTempDir = Directory.systemTemp;
-// Creates dir/, dir/subdir/, and dir/subdir/file.txt in the system
-// temp directory.
-var file = await File(filePath)
-.create(recursive: true);
-
-var writeFileContents = file.openWrite(mode:FileMode.append);
-
-writeFileContents.write(jsoncontents);
 
 }
+
